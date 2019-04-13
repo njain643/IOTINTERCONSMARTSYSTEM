@@ -1,0 +1,210 @@
+<!doctype html>
+{% load static %}
+<html>
+<head>
+<title>Smart System</title>
+<meta charset="utf-8" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+<meta name="viewport" content="width=device-width" />
+<!-- For ease i'm just using a JQuery version hosted by JQuery- you can download any version and link to it locally -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+</head>
+<!--<script>-->
+<!--	window.setTimeout(function () {-->
+<!--    location.href = "http://localhost:8000/";-->
+<!--}, 5000); // refresh/redirect after 5 seconds.-->
+<!--</script>-->
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">IOT INTERCON SMART OFFICE SYSTEM</a>
+        </div>
+</nav>
+<div class="section">
+	<div class="row">
+	    <div class="col-7">
+	      <nav class="navbar navbar-light bg-light">
+		  <span class="navbar-brand">Current Reading</span>
+	      </nav>
+	    </div>
+	    <div class="col">
+	      <nav class="navbar navbar-light bg-light">
+		  <span class="navbar-brand">Controls</span>
+	      </nav>
+	    </div>
+	</div>
+	<div class="row">
+	    <div id="readings" class="col-7">
+	      <div class="container">
+		    <div class="row">
+                <div class="col-md-4 block">
+                    <br><p class="text-monospace">Sensor 1</p>
+                    <div id="sensor1">
+                    {% if sensor1.value < 25  %}
+						<div style="background:green;" class="circle"><p>{{sensor1.value}} - {{sensor1.name}}</p></div>
+					{% elif sensor1.value > 25 and sensor1.value < 35 %}
+						<div style="background:yellow;" class="circle"><p>{{sensor1.value}} - {{sensor1.name}}</p></div>
+					{% else %}
+						<div style="background:red;" class="circle"><p>{{sensor1.value}} - {{sensor1.name}}</p></div>
+					{% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4 block">
+                    <br><p class="text-monospace">Sensor 2</p>
+                    <div id="sensor2">
+                    {% if sensor2.value < 25  %}
+						<div style="background:green;" class="circle"><p>{{sensor2.value}} - {{sensor2.name}}</p></div>
+					{% elif sensor2.value > 25 and sensor2.value < 35 %}
+						<div style="background:yellow;" class="circle"><p>{{sensor2.value}} - {{sensor2.name}}</p></div>
+					{% else %}
+						<div style="background:red;" class="circle"><p>{{sensor2.value}} - {{sensor2.name}}</p></div>
+					{% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4 block">
+                    <br><p class="text-monospace">Sensor 3</p>
+                    <div id="sensor3">
+                    {% if sensor3.value < 25  %}
+						<div style="background:green;" class="circle"><p>{{sensor3.value}} - {{sensor3.name}}</p></div>
+					{% elif sensor3.value > 25 and sensor3.value < 35 %}
+						<div style="background:yellow;" class="circle"><p>{{sensor3.value}} - {{sensor3.name}}</p></div>
+					{% else %}
+						<div style="background:red;" class="circle"><p>{{sensor3.value}} - {{sensor3.name}}</p></div>
+					{% endif %}
+                    </div>
+                </div>
+		    </div>
+		    <div class="row">
+                <div class="col-md-4 block">
+                    <br><p class="text-monospace">Sensor 4</p>
+                    <div style="background: red;" class="circle">
+                    <p>Some Text here Some text here</p>
+                    </div>
+                </div>
+                <div class="col-md-4 block">
+                    <br><p class="text-monospace">Sensor 5</p>
+                    <div style="background: yellow;" class="circle">
+                    <p>Some Text here</p>
+                    </div>
+                </div>
+                <div class="col-md-4 block">
+                    <br><p class="text-monospace">Sensor 6</p>
+                    <div style="background: green;" class="circle">
+                    <p>Some More Text here</p>
+                    </div>
+                </div>
+		    </div>
+		</div>
+	    </div>
+	    <div id="controls" class="col">
+	      <table class="table table-borderless">
+		  <thead>
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">Name</th>
+		      <th scope="col">State</th>
+		      <th scope="col">Action</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		      <th scope="row">1</th>
+		      <td>Blr-Fan</td>
+				{% if blrfanstatus == 1 %}
+		      		<td style="color:green;font-weight: bold;">
+				  		ON
+			  		</td>
+				{% elif blrfanstatus == 0 %}
+					<td style="color:red;font-weight: bold;">
+				  		OFF
+			  		</td>
+				{% else %}
+			  		<td>
+						<small class="text-muted">
+						  <em>No yet started.</em>
+						</small>
+					</td>
+				{% endif %}
+		      <td>
+		        <a href="#" type="button" class="btn btn-dark">On</a>
+		        <a href="#"  type="button" class="btn btn-light">Off</a>
+		      </td>
+		    </tr>
+		  	<tr>
+		      <th scope="row">2</th>
+		      <td>Blr-Light</td>
+				{% if blrlightstatus == 1 %}
+		      		<td style="color:green;font-weight: bold;">
+				  		ON
+			  		</td>
+				{% elif blrlightstatus == 0 %}
+					<td style="color:red;font-weight: bold;">
+				  		OFF
+			  		</td>
+				{% else %}
+			  		<td>
+						<small class="text-muted">
+						  <em>No yet started.</em>
+						</small>
+					</td>
+				{% endif %}
+		      <td>
+		        <a href="#" type="button" class="btn btn-dark">On</a>
+		        <a href="#"  type="button" class="btn btn-light">Off</a>
+		      </td>
+		    </tr>
+		  <tr>
+		      <th scope="row">3</th>
+		      <td>Vanc-Fan</td>
+				{% if vancfanstatus == 1 %}
+		      		<td style="color:green;font-weight: bold;">
+				  		ON
+			  		</td>
+				{% elif vancfanstatus == 0 %}
+					<td style="color:red;font-weight: bold;">
+				  		OFF
+			  		</td>
+			    {% else %}
+			  		<td>
+						<small class="text-muted">
+						  <em>No yet started.</em>
+						</small>
+					</td>
+				{% endif %}
+		      <td>
+		        <a href="#" type="button" class="btn btn-dark">On</a>
+		        <a href="#"  type="button" class="btn btn-light">Off</a>
+		      </td>
+		    </tr>
+		  <tr>
+		      <th scope="row">4</th>
+		      <td>Vanc-Light</td>
+				{% if vanclightstatus == 1 %}
+		      		<td style="color:green;font-weight: bold;">
+				  		ON
+			  		</td>
+				{% elif vanclightstatus == 0 %}
+					<td style="color:red;font-weight: bold;">
+				  		OFF
+			  		</td>
+			  	{% else %}
+			  		<td>
+						<small class="text-muted">
+						  <em>No yet started.</em>
+						</small>
+					</td>
+				{% endif %}
+		      <td>
+		        <a href="#" type="button" class="btn btn-dark">On</a>
+		        <a href="#"  type="button" class="btn btn-light">Off</a>
+		      </td>
+		    </tr>
+		  </tbody>
+		</table>
+	    </div>
+	</div>
+</div>
+</body>
+</html>
