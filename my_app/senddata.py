@@ -37,5 +37,3 @@ while True:
 
     time.sleep(5)
 
-
-    print(d)
