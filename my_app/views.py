@@ -4,6 +4,7 @@ from .models import *
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -14,8 +15,27 @@ def home(request):
         blrfanstatus = Blr_FanOnOffStatus.objects.order_by('timestamp').last().status == 1 and "ON" or "OFF"
     else:
         blrfanstatus = None
+
+    if Blr_LightOnOffStatus.objects.count() > 0:
+        blrlightstatus = Blr_LightOnOffStatus.objects.order_by('timestamp').last().status == 1 and "ON" or "OFF"
+    else:
+        blrlightstatus = None
+
+    if Vanc_FanOnOffStatus.objects.count() > 0:
+        vancfanstatus = Vanc_FanOnOffStatus.objects.order_by('timestamp').last().status == 1 and "ON" or "OFF"
+    else:
+        vancfanstatus = None
+
+    if Vanc_LightOnOffStatus.objects.count() > 0:
+        vanclightstatus = Vanc_LightOnOffStatus.objects.order_by('timestamp').last().status == 1 and "ON" or "OFF"
+    else:
+        vanclightstatus = None
+
     return render(request, 'my_app/dashboard.html', {
                                                      'blrfanstatus' : blrfanstatus,
+                                                     'blrlightstatus': blrlightstatus,
+                                                     'vancfanstatus': vancfanstatus,
+                                                     'vanclightstatus': vanclightstatus,
                                                      'sensor1':Sensor1.objects.order_by('timestamp').last(),
                                                      'sensor2':Sensor2.objects.order_by('timestamp').last(),
                                                      'sensor3':Sensor3.objects.order_by('timestamp').last(),
@@ -70,60 +90,106 @@ def uploadsensordata(request):
         info = {'response': 'No data found', 'status': '400'}
     return HttpResponse(json.dumps(info))
 
-
+@csrf_exempt
+@require_http_methods(["POST"])
 def blrfanstatus(request, status):
+
     data = {
         'is_valid': False
     }
 
-    if request.is_ajax():
-        obj = Blr_FanOnOffStatus(status=status)
-        obj.save()
-        data.update(is_valid=True)
-        data.update(control='blrfan')
-        if status == 1:
-            data.update(response='ON')
+    if request.is_ajax() and request.method == 'POST':
+        if request.user.is_authenticated:
+            obj = Blr_FanOnOffStatus(status=status)
+            obj.save()
+            data.update(is_valid=True)
+            data.update(control='blrfan')
+            data.update(authenticated='True')
+            if status == 1:
+                data.update(response='ON')
+            else:
+                data.update(response='OFF')
         else:
-            data.update(response='OFF')
+            data.update(is_valid=True)
+            data.update(authenticated='False')
 
     return JsonResponse(data)
-#
-# def blrlightstatus(request,id):
-#     if id == 1:
-#         obj = Blr_LightOnOffStatus(status=1)
-#     elif id == 0:
-#         obj = Blr_LightOnOffStatus(status=0)
-#     else:
-#         return Http404
-#
-#     obj.save()
-#     return render(request, 'my_app/dashboard.html',
-#                   {'blrlightstatus': id, })
-#
-# def vancfanstatus(request,id):
-#     if id == 1:
-#         obj = Vanc_FanOnOffStatus(status=1)
-#     elif id == 0:
-#         obj = Blr_LightOnOffStatus(status=0)
-#     else:
-#         return Http404
-#
-#     obj.save()
-#     return render(request, 'my_app/dashboard.html',
-#                   {'vancfanstatus': id, })
-#
-#
-# def vanclightstatus(request,id):
-#     if id == 1:
-#         obj = Vanc_LightOnOffStatus(status=1)
-#     elif id == 0:
-#         obj = Blr_LightOnOffStatus(status=0)
-#     else:
-#         return Http404
-#
-#     obj.save()
-#     return render(request, 'my_app/dashboard.html',
-#                   {'vanclightstatus': id, })
-#
-#
-#
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def blrlightstatus(request,status):
+
+    data = {
+        'is_valid': False
+    }
+
+    if request.is_ajax() and request.method == 'POST':
+        if request.user.is_authenticated:
+            obj = Blr_LightOnOffStatus(status=status)
+            obj.save()
+            data.update(is_valid=True)
+            data.update(control='blrlight')
+            data.update(authenticated='True')
+            if status == 1:
+                data.update(response='ON')
+            else:
+                data.update(response='OFF')
+        else:
+            data.update(is_valid=True)
+            data.update(authenticated='False')
+
+    return JsonResponse(data)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def vancfanstatus(request,status):
+
+    data = {
+        'is_valid': False
+    }
+
+    if request.is_ajax() and request.method == 'POST':
+        if request.user.is_authenticated:
+            obj = Vanc_FanOnOffStatus(status=status)
+            obj.save()
+            data.update(is_valid=True)
+            data.update(control='vancfan')
+            data.update(authenticated='True')
+            if status == 1:
+                data.update(response='ON')
+            else:
+                data.update(response='OFF')
+        else:
+            data.update(is_valid=True)
+            data.update(authenticated='False')
+
+    return JsonResponse(data)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def vanclightstatus(request,status):
+
+    data = {
+        'is_valid': False
+    }
+
+    if request.is_ajax() and request.method == 'POST':
+        if request.user.is_authenticated:
+            obj = Vanc_LightOnOffStatus(status=status)
+            obj.save()
+            data.update(is_valid=True)
+            data.update(control='vanclight')
+            data.update(authenticated='True')
+            if status == 1:
+                data.update(response='ON')
+            else:
+                data.update(response='OFF')
+        else:
+            data.update(is_valid=True)
+            data.update(authenticated='False')
+
+    return JsonResponse(data)
+
+
+
